@@ -1,0 +1,31 @@
+﻿生成启动时间为 2017/9/10 21:13:56。
+     1>项目“G:\VSQtProgram\sketch\meshPro\meshPro.vcxproj”在节点 2 上(Build 个目标)。
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(357,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (meshPro.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>CustomBuild:
+         Moc'ing meshPro.h...
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_meshPro.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_meshPro.cpp, GeneratedFiles\Release\moc_meshPro.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_myOpenGLWidget.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_myOpenGLWidget.cpp, GeneratedFiles\Release\moc_myOpenGLWidget.cpp.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I.\GeneratedFiles /I. /IF:\Qt\Qt5.7.0\5.7\msvc2013_64\include /I.\GeneratedFiles\Debug /IF:\Qt\Qt5.7.0\5.7\msvc2013_64\include\QtCore /IF:\Qt\Qt5.7.0\5.7\msvc2013_64\include\QtGui /IF:\Qt\Qt5.7.0\5.7\msvc2013_64\include\QtWidgets /Zi /nologo /W1 /WX- /Od /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_WIDGETS_LIB /D _USE_MATH_DEFINES /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt GeneratedFiles\Debug\moc_meshPro.cpp main.cpp meshPro.cpp
+         moc_meshPro.cpp
+         main.cpp
+         meshPro.cpp
+         正在生成代码...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"G:\VSQtProgram\sketch\bin\\sketch.exe" /NOLOGO /LIBPATH:F:\Qt\Qt5.7.0\5.7\msvc2013_64\lib /LIBPATH:"F:\Program Files\OpenMesh 6.3\lib" OpenMeshCored.lib OpenMeshToolsd.lib qtmaind.lib Qt5Cored.lib Qt5Guid.lib Qt5Widgetsd.lib G:\VSQtProgram\sketch\lib\freeglut.lib G:\VSQtProgram\sketch\lib\Qt5OpenGL.lib OpenMeshCored.lib OpenMeshToolsd.lib opencv_ml249d.lib opencv_calib3d249d.lib opencv_contrib249d.lib opencv_core249d.lib opencv_features2d249d.lib opencv_flann249d.lib opencv_gpu249d.lib opencv_highgui249d.lib opencv_imgproc249d.lib opencv_legacy249d.lib opencv_objdetect249d.lib opencv_ts249d.lib opencv_video249d.lib opencv_nonfree249d.lib opencv_ocl249d.lib opencv_photo249d.lib opencv_stitching249d.lib opencv_superres249d.lib opencv_videostab249d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"G:\VSQtProgram\sketch\bin\sketch.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\VSQtProgram\sketch\bin\sketch.lib" /MACHINE:X64 x64\Debug\ArcBall.obj
+         x64\Debug\triangle.obj
+         x64\Debug\tricall.obj
+         x64\Debug\moc_meshPro.obj
+         x64\Debug\moc_myOpenGLWidget.obj
+         x64\Debug\qrc_meshpro.obj
+         x64\Debug\main.obj
+         x64\Debug\meshPro.obj
+         x64\Debug\myOpenGLWidget.obj
+         x64\Debug\paraMesh.obj
+         meshPro.vcxproj -> G:\VSQtProgram\sketch\bin\sketch.exe
+     1>已完成生成项目“G:\VSQtProgram\sketch\meshPro\meshPro.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:15.19
