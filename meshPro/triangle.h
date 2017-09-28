@@ -247,7 +247,19 @@
 /*  not used, `numberofsegments' will indicate the number of boundary edges. */
 /*                                                                           */
 /*****************************************************************************/
-#define REAL double
+#ifndef _TRIANGLE_HEADER_  
+#define _TRIANGLE_HEADER_ 
+
+#ifdef _cplusplus  
+extern "C"{
+#endif///更改这里，博客加粗改颜色之后成代码了，不知为什么  
+
+#define REAL double  
+#define ANSI_DECLARATORS  
+#define VOID int  
+#include "triangle.h"  
+#include <qdebug.h>
+
 struct triangulateio {
   REAL *pointlist;                                               /* In / out */
   REAL *pointattributelist;                                      /* In / out */
@@ -278,12 +290,17 @@ struct triangulateio {
   REAL *normlist;                /* Used only with Voronoi diagram; out only */
   int numberofedges;                                             /* Out only */
 };
-#define ANSI_DECLARATORS
+
 #ifdef ANSI_DECLARATORS
 void triangulate(char *, struct triangulateio *, struct triangulateio *,
                  struct triangulateio *);
-void trifree(int *memptr);
+void trifree(VOID *memptr);
 #else /* not ANSI_DECLARATORS */
 void triangulate();
 void trifree();
 #endif /* not ANSI_DECLARATORS */
+#ifdef _cplusplus  
+}
+#endif
+
+#endif

@@ -3,8 +3,9 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>F:\Program Files\OpenMesh 6.3\include;$(IncludePath)</IncludePath>
-    <LibraryPath>F:\Program Files\OpenMesh 6.3\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\Program Files\OpenMesh 6.3_32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\Program Files\OpenMesh 6.3_32\lib;$(LibraryPath)</LibraryPath>
+    <_PropertySheetDisplayName>OpenMesh32</_PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

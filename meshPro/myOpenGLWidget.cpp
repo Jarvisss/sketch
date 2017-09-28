@@ -1,14 +1,27 @@
 #include "myopenglwidget.h"
 //#include <triangle.h>
 myOpenGLWidget::myOpenGLWidget(QWidget *parent) :
-QOpenGLWidget(parent),eye_distance_(5.0)
+QOpenGLWidget(parent), eye_distance_(5.0)
 {
 	ptr_arcball_ = new CArcBall(width(), height());
 	eye_goal_[0] = eye_goal_[1] = eye_goal_[2] = 0.0;
 	eye_direction_[0] = eye_direction_[1] = 0.0;
 	eye_direction_[2] = 1.0;
 	
+	border_curve.penColor = black;
+
 }
+//m_Point::m_Point()
+//{
+//	x = y = a = b = c = d = 0;
+//}
+//m_Point::m_Point(GLdouble x, GLdouble y)
+//{
+//	this->x = x;
+//	this->y = y;
+//	a = b = c = d = 0;
+//}
+
 myOpenGLWidget::~myOpenGLWidget()
 {
 	delete[] ptr_arcball_;
@@ -75,8 +88,8 @@ void myOpenGLWidget::setLightPositionZ(int z)
 
 void myOpenGLWidget::setLight()
 {
-	static GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	static GLfloat mat_shininess[] = { 50.0 };
+	static GLfloat mat_specular[] = { 0.5, 0.5, 0.5, 0.5 };
+	static GLfloat mat_shininess[] = { 20.0 };
 	static GLfloat white_light[] = { 0.8, 0.8, 0.8, 1.0 };
 	static GLfloat lmodel_ambient[] = { 0.3, 0.3, 0.3, 1.0 };
 
@@ -98,17 +111,18 @@ void myOpenGLWidget::initMesh(MyMesh* themesh){
 }
 
 void myOpenGLWidget::render(){
-	if (myMesh!=NULL){
-		if (showFace)
-			drawFace();
-		if (showWire)
-			drawEdge();
-		if (showPoint)
-			drawPoint();
-		if (show2DTexture)
-			draw2DTextureLines();
-			
-	}
+	//if (myMesh!=NULL){
+	//	if (showFace)
+	//		drawFace();
+	//	if (showWire)
+	//		drawEdge();
+	//	if (showPoint)
+	//		drawPoint();
+	//	if (show2DTexture)
+	//		draw2DTextureLines();
+	//	
+	//		
+	//}
 	
 	glDisable(GL_LIGHTING);
 	glDisable(GL_LIGHT0);
@@ -118,7 +132,11 @@ void myOpenGLWidget::render(){
 	if (showAxes)
 		drawAxes();
 	if (is_closed)
+	{
 		drawBorder();
+		drawTriangle();
+	}
+		
 	
 	drawTransparentPlane();
 
@@ -219,7 +237,7 @@ void myOpenGLWidget::drawFace(){
 void myOpenGLWidget::drawAxes()
 {
 	//x axis
-	glColor3f(1.0, 0.0, 0.0);
+	glColor3fv(red);
 	glBegin(GL_LINES);
 	glVertex3f(0, 0, 0);
 	glVertex3f(0.7, 0.0, 0.0);
@@ -231,7 +249,7 @@ void myOpenGLWidget::drawAxes()
 	glPopMatrix();
 
 	//y axis
-	glColor3f(0.0, 1.0, 0.0);
+	glColor3fv(green);
 	glBegin(GL_LINES);
 	glVertex3f(0, 0, 0);
 	glVertex3f(0.0, 0.7, 0.0);
@@ -244,7 +262,7 @@ void myOpenGLWidget::drawAxes()
 	glPopMatrix();
 
 	//z axis
-	glColor3f(0.0, 0.0, 1.0);
+	glColor3fv(blue);
 	glBegin(GL_LINES);
 	glVertex3f(0, 0, 0);
 	glVertex3f(0.0, 0.0, 0.7);
@@ -254,29 +272,32 @@ void myOpenGLWidget::drawAxes()
 	//glutSolidCone(0.02, 0.06, 20, 10);
 	glPopMatrix();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(white);
 }
 void myOpenGLWidget::drawPath(){
+	for (int i = 0; i < TYPES; i++)
+	{
+		for (auto iter = path[i].begin(); iter != path[i].end(); ++iter){
+			glColor3fv(iter->penColor);
+			glBegin(GL_LINE_STRIP);
+			//qDebug() << "line" << i;
+			for (auto c_iter = iter->curve.begin(); c_iter != iter->curve.end(); ++c_iter)
+			{
+				//qDebug() << c_iter->x<<"," << c_iter->y;
+				glVertex2d(c_iter->x, c_iter->y);
 
-	for (auto iter = path.begin(); iter != path.end(); ++iter){
-		glColor3f(0, 0, 0);
-		glBegin(GL_LINE_STRIP);
-		//qDebug() << "line" << i;
-		for (auto c_iter = iter->begin(); c_iter != iter->end(); ++c_iter)
-		{
-			//qDebug() << c_iter->x<<"," << c_iter->y;
-			glVertex2d(c_iter->x, c_iter->y);
-
+			}
+			glEnd();
 		}
-		glEnd();
 	}
+	
 }
 
 void myOpenGLWidget::drawCurrentCurv(){
-	glColor3f(0, 0, 0);
+	glColor3fv(current_curve.penColor);
 	glBegin(GL_LINE_STRIP);
 
-	for (auto c_iter = current_curve.begin(); c_iter != current_curve.end(); ++c_iter)
+	for (auto c_iter = current_curve.curve.begin(); c_iter != current_curve.curve.end(); ++c_iter)
 	{
 
 		//qDebug() << c_iter->x << "," << c_iter->y;
@@ -300,16 +321,53 @@ void myOpenGLWidget::drawTransparentPlane(){
 	glDisable(GL_BLEND);
 }
 
-//red border
+void myOpenGLWidget::drawTriangle()
+{
+	int n = mid.numberoftriangles;
+	//glColor3fv(triangle_color);
+	//for (int i = 0; i < n; i++)
+	//{
+	//	
+	//	glBegin(GL_TRIANGLES);
+	//	for (int j = 0; j < mid.numberofcorners; j++)
+	//	{
+	//		int num = mid.trianglelist[i * mid.numberofcorners + j];
+	//		glVertex3d(mid.pointlist[num * 2], mid.pointlist[num * 2 + 1], 0);
+	//		glNormal3d(0, 0, 1);
+	//	}
+	//	glEnd();
+	//}
+	glColor3fv(triangle_color);
+	glPolygonMode(GL_FRONT, GL_LINE);
+	glPolygonMode(GL_BACK, GL_LINE);
+	for (int i = 0; i < n; i++)
+	{
+
+		glBegin(GL_TRIANGLES);
+		for (int j = 0; j < mid.numberofcorners; j++)
+		{
+			int num = mid.trianglelist[i * mid.numberofcorners + j];
+			glVertex3d(mid.pointlist[num * 2], mid.pointlist[num * 2 + 1], 0);
+		}
+		glEnd();
+	}
+	glPolygonMode(GL_FRONT, GL_FILL);
+	glPolygonMode(GL_BACK, GL_FILL);
+
+}
+
+//black border
 void myOpenGLWidget::drawBorder()
 {
-	glColor3f(1, 0, 0);
-	glBegin(GL_POINTS);
-	for (auto iter = border_curve.begin(); iter != border_curve.end(); ++iter)
+	glColor3fv(border_curve.penColor);
+	glBegin(GL_LINE_STRIP);
+	m_Point start_point = border_curve.curve.at(0);
+	for (auto iter = border_curve.curve.begin(); iter != border_curve.curve.end(); ++iter)
 	{
 		glVertex2d(iter->x, iter->y);
+
 	}
-		
+	glVertex2d(start_point.x, start_point.y);
 	glEnd();
 }
 void report(
@@ -329,100 +387,183 @@ int reportnorms)
 			//qDebug() ;
 		//}
 		if (io->numberofpointattributes > 0) {
-			printf("   attributes");
+			qDebug()<<"   attributes";
 		}
 		for (j = 0; j < io->numberofpointattributes; j++) {
-			printf("  %.6g",
-				io->pointattributelist[i * io->numberofpointattributes + j]);
+			qDebug() << io->pointattributelist[i * io->numberofpointattributes + j];
 		}
 		if (markers) {
-			printf("   marker %d\n", io->pointmarkerlist[i]);
+			qDebug() << "   marker "<< io->pointmarkerlist[i];
 		}
-		else {
-			printf("\n");
-		}
+		
 	}
-	printf("\n");
 
 	if (reporttriangles || reportneighbors) {
 		for (i = 0; i < io->numberoftriangles; i++) {
 			if (reporttriangles) {
-				printf("Triangle %4d points:", i);
+				qDebug()<<"Triangle "<< i<< ": points:";
 				for (j = 0; j < io->numberofcorners; j++) {
-					printf("  %4d", io->trianglelist[i * io->numberofcorners + j]);
+					qDebug("  %4d", io->trianglelist[i * io->numberofcorners + j]);
 				}
 				if (io->numberoftriangleattributes > 0) {
-					printf("   attributes");
+					qDebug("   attributes");
 				}
 				for (j = 0; j < io->numberoftriangleattributes; j++) {
-					printf("  %.6g", io->triangleattributelist[i *
+					qDebug("  %.6g", io->triangleattributelist[i *
 						io->numberoftriangleattributes + j]);
 				}
-				printf("\n");
+				qDebug("\n");
 			}
 			if (reportneighbors) {
-				printf("Triangle %4d neighbors:", i);
+				qDebug("Triangle %4d neighbors:", i);
 				for (j = 0; j < 3; j++) {
-					printf("  %4d", io->neighborlist[i * 3 + j]);
+					qDebug("  %4d", io->neighborlist[i * 3 + j]);
 				}
-				printf("\n");
+				qDebug("\n");
 			}
 		}
-		printf("\n");
+		qDebug("\n");
 	}
 
 	if (reportsegments) {
 		for (i = 0; i < io->numberofsegments; i++) {
-			printf("Segment %4d points:", i);
+			qDebug("Segment %4d points:", i);
 			for (j = 0; j < 2; j++) {
-				printf("  %4d", io->segmentlist[i * 2 + j]);
+				qDebug("  %4d", io->segmentlist[i * 2 + j]);
 			}
 			if (markers) {
-				printf("   marker %d\n", io->segmentmarkerlist[i]);
+				qDebug("   marker %d\n", io->segmentmarkerlist[i]);
 			}
 			else {
-				printf("\n");
+				qDebug("\n");
 			}
 		}
-		printf("\n");
+		qDebug("\n");
 	}
 
 	if (reportedges) {
 		for (i = 0; i < io->numberofedges; i++) {
-			printf("Edge %4d points:", i);
+			qDebug("Edge %4d points:", i);
 			for (j = 0; j < 2; j++) {
-				printf("  %4d", io->edgelist[i * 2 + j]);
+				qDebug("  %4d", io->edgelist[i * 2 + j]);
 			}
 			if (reportnorms && (io->edgelist[i * 2 + 1] == -1)) {
 				for (j = 0; j < 2; j++) {
-					printf("  %.6g", io->normlist[i * 2 + j]);
+					qDebug("  %.6g", io->normlist[i * 2 + j]);
 				}
 			}
 			if (markers) {
-				printf("   marker %d\n", io->edgemarkerlist[i]);
+				qDebug("   marker %d\n", io->edgemarkerlist[i]);
 			}
 			else {
-				printf("\n");
+				qDebug("\n");
 			}
 		}
-		printf("\n");
+		qDebug("\n");
 	}
 }
 
+
+
 void myOpenGLWidget::myTriangulate()
 {
-	int n = border_curve.size();
-	in.numberofpoints = n;
+	int n = border_curve.curve.size();
+	int k = path[3].size();
+	int m = 0;
+	qDebug("total feature lines:%d\n", k);
+	for (auto iter = path[3].begin(); iter != path[3].end(); ++iter)
+	for (auto p_it = iter->curve.begin(); p_it != iter->curve.end(); ++p_it, ++m)
+		;
+		
+		
+	
+	qDebug("total feature points:%d\n", m);
+
+	in.numberofpoints = m+n;
 	in.numberofpointattributes = 0;
 	in.pointlist = (REAL* )malloc(in.numberofpoints * 2 * sizeof(REAL));
+	in.pointmarkerlist = (int*)malloc(in.numberofpoints*sizeof(int));
+	in.numberofsegments = n+m-k;
+	in.segmentlist = (int *)malloc(in.numberofsegments*sizeof(int)* 2);
+	in.segmentmarkerlist = (int *)malloc(in.numberofsegments*sizeof(int));
 	int i = 0;
-	for (auto iter = border_curve.begin(); iter != border_curve.end(); ++iter,i+=2)
+	for (auto iter = border_curve.curve.begin(); iter != border_curve.curve.end(); ++iter,i+=2)
 	{
 		in.pointlist[i] = iter->x;
 		in.pointlist[i + 1] = iter->y;
+		in.pointmarkerlist[i / 2] = 1;
+
+		in.segmentlist[i] = i/2;
+		in.segmentlist[i+1] = i/2+1;
+		in.segmentmarkerlist[i / 2] = 1;
 	}
 
-	report(&in, 0, 0, 0, 0, 0, 0);
+	in.segmentlist[i - 1] = 0;
+	
+	for (auto iter = path[3].begin(); iter != path[3].end(); ++iter)
+	{
+		for (auto p_it = iter->curve.begin(); p_it != iter->curve.end(); ++p_it, i += 2)
+		{
+			in.pointlist[i] = p_it->x;
+			in.pointlist[i + 1] = p_it->y;
+			in.pointmarkerlist[i / 2] = 1;
+
+			if (p_it!=iter->curve.end()-1)
+			{
+				in.segmentlist[i] = i / 2;
+				in.segmentlist[i + 1] = i / 2 + 1;
+				in.segmentmarkerlist[i / 2] = 1;
+			}
+			
+		}
+			
+	}
+	
+	
+
+
+	in.numberofholes = 0;
+
+
+	in.pointattributelist = (REAL *)NULL;
+	in.trianglelist = (int *)NULL;          /* Not needed if -E switch used. */
+	in.triangleattributelist = (REAL *)NULL;
+	in.neighborlist = (int *)NULL;         /* Needed only if -n switch used. */
+	
+	in.edgelist = (int *)NULL;             /* Needed only if -e switch used. */
+	in.edgemarkerlist = (int *)NULL;   /* Needed if -e used and -B not used. */
+	/* Make necessary initializations so that Triangle can return a */
+	/*   triangulation in `mid' and a voronoi diagram in `vorout'.  */
+	mid.pointlist = (REAL *)NULL;            /* Not needed if -N switch used. */
+	/* Not needed if -N switch used or number of point attributes is zero: */
+	mid.pointattributelist = (REAL *)NULL;
+	mid.pointmarkerlist = (int *)NULL; /* Not needed if -N or -B switch used. */
+	mid.trianglelist = (int *)NULL;          /* Not needed if -E switch used. */
+	/* Not needed if -E switch used or number of triangle attributes is zero: */
+	mid.triangleattributelist = (REAL *)NULL;
+	mid.neighborlist = (int *)NULL;         /* Needed only if -n switch used. */
+	/* Needed only if segments are output (-p or -c) and -P not used: */
+	mid.segmentlist = (int *)NULL;
+	/* Needed only if segments are output (-p or -c) and -P and -B not used: */
+	mid.segmentmarkerlist = (int *)NULL;
+	mid.edgelist = (int *)NULL;             /* Needed only if -e switch used. */
+	mid.edgemarkerlist = (int *)NULL;   /* Needed if -e used and -B not used. */
+
+	vorout.pointlist = (REAL *)NULL;        /* Needed only if -v switch used. */
+	/* Needed only if -v switch used and number of attributes is not zero: */
+	vorout.pointattributelist = (REAL *)NULL;
+	vorout.edgelist = (int *)NULL;          /* Needed only if -v switch used. */
+	vorout.normlist = (REAL *)NULL;         /* Needed only if -v switch used. */
+	
+
+	qDebug()<<"Input point set:\n\n";
+	report(&in, 0, 0, 0, 1, 0, 0);
+	triangulate("pzq30a.005", &in, &mid, &vorout);
+	
+	qDebug()<<"Initial triangulation:\n\n";
+	report(&mid, 1, 1, 0, 1, 0, 0);
+	/*qDebug()<<"Initial Voronoi diagram:\n\n";
+	report(&vorout, 0, 0, 0, 0, 1, 1);*/
 }
 
 void myOpenGLWidget::loadTexture(){
@@ -460,8 +601,9 @@ void myOpenGLWidget::loadTexture(){
 
 void myOpenGLWidget::clearLines()
 {
-	path.clear();
-	current_curve.clear();
+	for (int i = 0; i < TYPES; i++)
+		path[i].clear();
+	current_curve.curve.clear();
 	update();
 }
 
@@ -484,27 +626,101 @@ void myOpenGLWidget::setBackGroundTexture(){
 	glDisable(GL_TEXTURE_2D);
 }
 
+void myOpenGLWidget::segment(Curve *c)
+{
+	
+	if (c->size() <= 3)
+		return;
+
+	Curve tempc;
+	tempc.push_back(c->at(0));
+	double z_last = 0;
+	for (auto iter = c->begin()+1; iter != c->end()-1; iter++)
+	{
+		
+		m_Point now = *iter;
+		m_Point before = *(iter-1);
+		m_Point after = *(iter+1);
+
+		tempc.push_back(now);
+
+		Eigen::Vector3d v1(now.x -before.x, now.y - before.y,0);
+		Eigen::Vector3d v2(after.x - before.x, after.y - before.y, 0);
+		Eigen::Vector3d v3(after.x - now.x, after.y - now.y, 0);
+
+		double z1 = v1.cross(v3)[2];
+		if (z1*z_last < 0) { simpleStroke.push_back(tempc); tempc.clear(); }
+		z_last = z1;
+		
+	}
+	tempc.push_back(*(c->end()));
+	simpleStroke.push_back(tempc);
+	tempc.clear();
+
+	qDebug("number of simple strokes: %d\n",simpleStroke.size());
+}
+//void myOpenGLWidget::natural_cubic_spline(Curve* c)
+//{
+//	int n;
+//	if (n=c->size() <= 2)
+//		return;
+//
+//	// A * x = b  
+//	coeff.resize(n, n);
+//	coeff.setZero(n, n);// coefficient 
+//	m.resize(n, 1);
+//	m.setZero(n, 1);//
+//	p.resize(n, 1);
+//	p.setZero(n, 1);
+//	
+//	
+//	double dxi_1, dxi;
+//	double dyi_1, dyi;
+//
+//	int i = 1;
+//	coeff(0,0) = 1;
+//	for (auto iter = c->begin()+1; iter != c->end()-1; ++iter,++i)
+//	{
+//		// dxi = xi+1 - xi
+//		dxi_1 = iter->x - (iter - 1)->x;
+//		dxi = (iter + 1)->x - iter->x;
+//
+//		// dyi = yi+1 - yi
+//		dyi_1 = iter->y - (iter - 1)->y;
+//		dyi = (iter + 1)->y - iter->y;
+//
+//		coeff(i, i - 1) = dxi_1;				// hi-1
+//		coeff(i, i) = 2 * (dxi_1 + dxi);		// 2(hi-1 + hi)
+//		coeff(i, i + 1) = dxi;				// hi
+//
+//		p(i) = 6 * (dyi / dxi - dyi_1 / dxi_1);
+//	}
+//	coeff(n - 1, n - 1) = 1;
+//	
+//	//solve 
+//	m = coeff.colPivHouseholderQr().solve(p);
+//}
 
 bool myOpenGLWidget::isBorderClosed(){
 	
-	if (calcBorderPart(&current_curve))
+	if (calcBorderPart(&current_curve.curve))
 	{
 		myTriangulate();
 		return true;
 	}
-	
+	return false;
 	//----- not completed -----//
 
-	return false;
+	
 	//std::vector< std::vector<m_Point> > path;
-	for (auto iter = path.begin(); iter != path.end(); ++iter)
+	for (auto iter = path[1].begin(); iter != path[1].end(); ++iter)
 	{
 		//新绘制的曲线和原曲线中的一条有2个以上交点，则有闭合区域
-		int N = hasNIntersection(&(*iter), &current_curve);
+		int N = hasNIntersection(&iter->curve, &current_curve.curve);
 		if (N >= 2)
 		{
 			
-			int nPosition = std::distance(path.begin(), iter);
+			int nPosition = std::distance(path[1].begin(), iter);
 			qDebug() << "jiaodian---> "<<nPosition << N;
 
 			return true;
@@ -512,13 +728,13 @@ bool myOpenGLWidget::isBorderClosed(){
 
 		else if (N == 1)
 		{
-			int nPosition = std::distance(path.begin(), iter);
+			int nPosition = std::distance(path[1].begin(), iter);
 			qDebug() << "jiaodian---> " << nPosition << N;
 		}
 
 		else if (N==0)
 		{
-			int nPosition = std::distance(path.begin(), iter);
+			int nPosition = std::distance(path[1].begin(), iter);
 			qDebug() << "jiaodian---> " << nPosition << N;
 		}
 		
@@ -527,6 +743,7 @@ bool myOpenGLWidget::isBorderClosed(){
 }
 
 bool myOpenGLWidget::calcBorderPart(Curve* c){
+	
 	if (c->size() <= 4)
 	{
 		return false;
@@ -536,31 +753,26 @@ bool myOpenGLWidget::calcBorderPart(Curve* c){
 	for (auto iter1 = c->begin() + 1; iter1 != c->end() - 2; ++iter1){
 
 		p1 = *iter1;
-		border_curve.push_back(p1);
-		qDebug() << "p1" << p1.x << "," << p1.y;
-		qDebug() << "p1_last" << p1_last.x << "," << p1_last.y;
+		temp_border.push_back(p1);
 		m_Point p2_last = *(iter1 + 1);
-		border_curve.push_back(p2_last);
+		temp_border.push_back(p2_last);
 		m_Point p2;
 		for (auto iter2 = iter1 + 2; iter2 != c->end(); ++iter2){
 			p2 = *iter2;
-			border_curve.push_back(p2);
-			qDebug() << "p2" << p2.x << "," << p2.y;
-			qDebug() << "p2_last" << p2_last.x << "," << p2_last.y;
+			temp_border.push_back(p2);
 			if (isCross(p1_last, p1, p2_last, p2))
 			{
-				if (border_curve.size() > 0)
+				if (temp_border.size() > 0)
 				{
-					border_curve.pop_back();
-					border_curve.push_back(Cross(p1_last, p1, p2_last, p2));
+					temp_border.pop_back();
+					temp_border.push_back(Cross(p1_last, p1, p2_last, p2));
 				}
-				
-				
+				border_curve.curve = temp_border;
 				return true;
 			}
 			p2_last = p2;
 		}
-		border_curve.clear();
+		temp_border.clear();
 		p1_last = p1;
 	}
 	return false;
@@ -643,16 +855,6 @@ int myOpenGLWidget::hasNIntersection(Curve* a, Curve* b){
 
 m_Point myOpenGLWidget::to_perspect(QPoint point)
 {
-	/*int actualx = point.x();
-	int actualy = point.y();*/
-	
-	/*if (point.x() > width()*x_ratio){
-		actualx = width()*x_ratio;
-	}
-	else if (point.x() < 75){
-
-	}
-	else if ()*/
 
 	GLdouble actual_distance_ = 5;
 	GLdouble theta = 22.5 / 180 * PI;
@@ -788,16 +990,18 @@ void myOpenGLWidget::mousePressEvent(QMouseEvent *event)
 		}
 	}
 	else if (inputMode == 1){
-		m_Point p{0,0};
+		m_Point p;
 		switch (event->button())
 		{
 
 		case Qt::LeftButton:
 			is_drawing = true;
-			current_curve.clear();
+			current_curve.curve.clear();
 			//qDebug() << "press (x,y) = ("<<event->pos().x()<<", "<<event->pos().y()<<")";
 			p = to_perspect(event->pos());
-			current_curve.push_back(p);
+			current_curve.curve.push_back(p);
+			current_curve.penColor = penColor;
+			current_curve.mode = drawMode;
 			break;
 		default:
 			break;
@@ -828,15 +1032,22 @@ void myOpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 		}
 	}
 	else if (inputMode == 1){
-		m_Point p{ 0, 0 };
+		
+		m_Point p;
 		switch (event->buttons())
 		{
 
 		case Qt::LeftButton:
 			///qDebug() << "screen (x,y) = (" << event->pos().x() << ", " << event->pos().y() << ")";
+			
 			p = to_perspect(event->pos());
-			//qDebug() << "projection (x,y) = (" << p.x << ", " << p.y << ")";
-			current_curve.push_back(p);
+
+			if (EularDistance(current_curve.curve.back(), p) > INTERVAL)
+			{
+				qDebug() << "projection (x,y) = (" << p.x << ", " << p.y << ")";
+				current_curve.curve.push_back(p);
+			}
+				
 			break;
 		default:
 			break;
@@ -845,6 +1056,13 @@ void myOpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 
 	update();
 }
+
+
+double myOpenGLWidget::EularDistance(m_Point a, m_Point b)
+{
+	return sqrtl((b.x - a.x)*(b.x - a.x) + ((b.y - a.y)*(b.y - a.y)));
+}
+
 void myOpenGLWidget::wheelEvent(QWheelEvent * event)
 {
 	if (inputMode == 0)
@@ -887,26 +1105,34 @@ void myOpenGLWidget::mouseReleaseEvent(QMouseEvent *e)
 	}
 	else if (inputMode = 1)
 	{
-		m_Point p{ 0, 0 };
+		m_Point p;
 		p = to_perspect(e->pos());
-
 		
-		current_curve.push_back(p);
 		
+		current_curve.curve.push_back(p);
+		//if (drawMode == 0)
+		//{
+		//	natural_cubic_spline(&(current_curve.curve));
+		//}
 		//intersection(current_curve, path);
 		
-		if (isBorderClosed())
+		if (drawMode==1 && isBorderClosed())
 		{
 			is_closed = true;
 			qDebug() << "closed" << endl;
 			clearLines();
-			update();
 		}
 		
-		path.push_back(current_curve);
+		if (drawMode == 0)
+		{
+			segment(&(current_curve.curve));
+		}
 		
+		path[drawMode].push_back(current_curve);
+		current_curve.curve.clear();
 
-		current_curve.clear();
+		if (drawMode == 3)
+			myTriangulate();
 		is_drawing = false;
 	}
 	update();

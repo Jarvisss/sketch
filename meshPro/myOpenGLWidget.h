@@ -3,7 +3,6 @@
 
 
 #include <qopenglwidget.h>
-
 #include <qopengltexture.h>
 #include <QMouseEvent>
 #include <QFileDialog>
@@ -23,14 +22,16 @@
 #include <string>
 #include <vector>
 #include <qopenglfunctions.h>
-
+#include <Eigen/dense>
+#include "color.h"
 #include <triangle.h>
 
 #define MAXSCALE 50
 #define MINSCALE 0.02
 #define RATIO 1.05
 #define PI 3.14159265359
-#define MAGIC 987654.32
+#define INTERVAL 0.1
+#define TYPES 4
 
 //#include <QGLWidget>
 namespace Ui {
@@ -39,17 +40,25 @@ class myOpenGLWidget;
 typedef OpenMesh::TriMesh_ArrayKernelT<> MyMesh;
 
 
-struct m_Point{
+class m_Point{
+
+public:
 	GLdouble x;
 	GLdouble y;
+	//double a,b,c,d;
+
+	//m_Point(GLdouble,GLdouble);
+	//m_Point();
 };
 
 typedef std::vector<m_Point> Curve;
 
-//struct m_Curve{
-//	Curve curve;
-//	Curve* p_next;
-//};
+
+struct m_Curve{
+	Curve curve;
+	int mode;
+	const GLfloat* penColor;
+};
 
 class myOpenGLWidget : public QOpenGLWidget
 {
@@ -60,6 +69,7 @@ public:
     ~myOpenGLWidget();
 
 	void setBackGroundTexture();
+
 
 	void initMesh(MyMesh*);
 	void resetProjection();
@@ -75,7 +85,9 @@ public:
 	void drawCurrentCurv();
 	void drawBorder();
 	void drawTransparentPlane();
+	void drawTriangle();
 	m_Point to_perspect(QPoint);
+	//void natural_cubic_spline(Curve*);
 
 	/* 
 	if closed, return [true] and set border_curves[] and set is_closed to true
@@ -83,12 +95,12 @@ public:
 	*/
 	bool isBorderClosed();
 
-
+	void segment(Curve *);
 	/*
 	return true if two segments are crossed
 	*/
 	bool isCross(m_Point, m_Point, m_Point, m_Point);
-
+	double EularDistance(m_Point, m_Point);
 	/*
 	return cross point;
 	*/
@@ -146,7 +158,15 @@ public:
 	float y_ratio = 0.9;
 
 	int inputMode=0; // 0 for drag; 1 for draw
-
+	/*
+	0	bend_line
+	1	contour_line
+	2	flat_line
+	3	feature_line
+	*/
+	int drawMode = 1; 
+	const GLfloat* penColor=black;
+	const GLfloat* triangle_color = light_blue;
 	bool showFace = false;
 	bool showWire = false;
 	bool showPoint = true;
@@ -169,13 +189,22 @@ public:
 
 private:
 	m_Point last_p;
-
+	Eigen::MatrixXd coeff, m, p;
 	//save current drawing points
-	Curve current_curve;
+	m_Curve current_curve;
+	Curve temp_border;
 
 	//save border points
-	Curve border_curve;
-	std::vector<Curve> path;
+	m_Curve border_curve;
+
+	/*
+	0	bend_line
+	1	contour_line
+	2	flat_line
+	3	feature_line
+	*/
+	std::vector<m_Curve> path[TYPES];
+	std::vector<Curve> simpleStroke;
 
 	CArcBall	*ptr_arcball_;
 	GLubyte		*pixels;
@@ -187,7 +216,7 @@ private:
 	double		scale;
 	
 
-	QPoint		current_position_;;
+	QPoint		current_position_;
 };
 
 #endif // MYOPENGLWIDGET_H

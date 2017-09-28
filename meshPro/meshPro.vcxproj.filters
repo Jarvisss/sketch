@@ -53,15 +53,6 @@
     <ClCompile Include="ArcBall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="paraMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="E:\Developer\triangle\triangle.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="E:\Developer\triangle\tricall.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_meshPro.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -69,6 +60,12 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="meshPro.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -90,13 +87,16 @@
     <ClInclude Include="ArcBall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="paraMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_sketch.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\Developer\triangle\triangle.h">
+    <ClInclude Include="triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

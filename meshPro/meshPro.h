@@ -13,7 +13,7 @@
 #include <opencv2\imgproc\imgproc.hpp>
 #include "ui_sketch.h"
 #include "myOpenGLWidget.h"
-#include "paraMesh.h"
+//#include "paraMesh.h"
 
 
 namespace Ui {
@@ -39,14 +39,19 @@ private:
 	myOpenGLWidget *myWidget=NULL;
 	QMenu		*menu[10];
 	QAction		*act[10];
-	paraMesh	*pMesh;
+	//paraMesh	*pMesh;
 	MyMesh		myMesh;
 	bool		is_loaded=false;
 
+	void unCheckModes();
+	void unCheckLines();
 private slots:
-	void triggerMenu(QAction* act);
 	void drag_clicked();
 	void draw_clicked();
+	void bend_line();
+	void contour_line();
+	void flat_line();
+	void feature_line();
 };
 
 #endif // MESHPRO_H

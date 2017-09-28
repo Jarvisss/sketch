@@ -128,7 +128,7 @@
         <number>10</number>
        </property>
        <item row="0" column="1">
-        <widget class="QPushButton" name="drawmode">
+        <widget class="QPushButton" name="draw">
          <property name="minimumSize">
           <size>
            <width>64</width>
@@ -177,7 +177,7 @@
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QPushButton" name="dragmode">
+        <widget class="QPushButton" name="drag">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -283,12 +283,18 @@
        <property name="text">
         <string>Bend</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="Contour">
        <property name="text">
         <string>Contour</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -297,6 +303,9 @@
        <property name="text">
         <string>Flat</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -304,12 +313,18 @@
        <property name="text">
         <string>Sharp feature</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="Valley">
        <property name="text">
         <string>Valley</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -406,7 +421,7 @@
  </resources>
  <connections>
   <connection>
-   <sender>dragmode</sender>
+   <sender>drag</sender>
    <signal>clicked()</signal>
    <receiver>meshProClass</receiver>
    <slot>drag_clicked()</slot>
@@ -422,7 +437,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>drawmode</sender>
+   <sender>draw</sender>
    <signal>clicked()</signal>
    <receiver>meshProClass</receiver>
    <slot>draw_clicked()</slot>
@@ -437,9 +452,77 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>Contour</sender>
+   <signal>clicked()</signal>
+   <receiver>meshProClass</receiver>
+   <slot>contour_line()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>869</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>952</x>
+     <y>91</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Flat</sender>
+   <signal>clicked()</signal>
+   <receiver>meshProClass</receiver>
+   <slot>flat_line()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>866</x>
+     <y>130</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>951</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Sharp</sender>
+   <signal>clicked()</signal>
+   <receiver>meshProClass</receiver>
+   <slot>feature_line()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>871</x>
+     <y>152</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>951</x>
+     <y>151</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Bend</sender>
+   <signal>clicked()</signal>
+   <receiver>meshProClass</receiver>
+   <slot>bend_line()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>806</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>951</x>
+     <y>58</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>drag_clicked()</slot>
   <slot>draw_clicked()</slot>
+  <slot>contour_line()</slot>
+  <slot>flat_line()</slot>
+  <slot>bend_line()</slot>
+  <slot>feature_line()</slot>
  </slots>
 </ui>

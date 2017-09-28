@@ -46,6 +46,7 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="OpenMesh.props" />
+    <Import Project="opencv.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -64,9 +65,8 @@
     <_ProjectFileVersion>12.0.21005.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)bin</OutDir>
-    <IncludePath>G:\VSQtProgram\sketch\include;F:\Qt\Qt5.7.0\5.7\msvc2013_64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>F:\Qt\Qt5.7.0\5.7\msvc2013_64\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)include;F:\Qt\Qt5.7.1\5.7\msvc2013\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\Qt\Qt5.7.1\5.7\msvc2013\lib;$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin</OutDir>
@@ -93,7 +93,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;$(SolutionDir)lib\freeglut.lib;$(SolutionDir)lib\trimesh.lib;$(SolutionDir)lib\Qt5OpenGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenMeshCored.lib;OpenMeshToolsd.lib;qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;$(SolutionDir)lib\freeglut.lib;$(SolutionDir)lib\Qt5OpenGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -147,8 +147,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ArcBall.cpp" />
-    <ClCompile Include="E:\Developer\triangle\triangle.c" />
-    <ClCompile Include="E:\Developer\triangle\tricall.c" />
     <ClCompile Include="GeneratedFiles\Debug\moc_meshPro.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -178,7 +176,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="meshPro.cpp" />
     <ClCompile Include="myOpenGLWidget.cpp" />
-    <ClCompile Include="paraMesh.cpp" />
+    <ClCompile Include="pMath.cpp" />
+    <ClCompile Include="triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="meshPro.h">
@@ -222,9 +221,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArcBall.h" />
-    <ClInclude Include="E:\Developer\triangle\triangle.h" />
+    <ClInclude Include="color.h" />
     <ClInclude Include="GeneratedFiles\ui_sketch.h" />
-    <ClInclude Include="paraMesh.h" />
+    <ClInclude Include="pMath.h" />
+    <ClInclude Include="triangle.h" />
     <CustomBuild Include="myOpenGLWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing myOpenGLWidget.h...</Message>
@@ -273,7 +273,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties MocDir=".\GeneratedFiles\$(ConfigurationName)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" lupdateOptions="" lupdateOnBuild="0" lreleaseOptions="" Qt5Version_x0020_x64="msvc2013_64" MocOptions="" />
+      <UserProperties MocDir=".\GeneratedFiles\$(ConfigurationName)" UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" lupdateOptions="" lupdateOnBuild="0" lreleaseOptions="" Qt5Version_x0020_Win32="msvc2013_32" Qt5Version_x0020_x64="msvc2013_64" MocOptions="" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
