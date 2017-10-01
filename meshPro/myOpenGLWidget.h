@@ -11,6 +11,8 @@
 #include <qtextcodec.h>
 #include <QtOpenGL\qgl.h>
 
+
+#include "types.h"
 #include <ArcBall.h>
 #include <GL\freeglut.h>
 #include <iostream>
@@ -18,6 +20,7 @@
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh> // ²Ù×÷ÎÄ¼þ 
 #include <opencv2\opencv.hpp>
 #include <math.h>
+#include <pMath.h>
 #include <Windows.h>
 #include <string>
 #include <vector>
@@ -37,28 +40,6 @@
 namespace Ui {
 class myOpenGLWidget;
 }
-typedef OpenMesh::TriMesh_ArrayKernelT<> MyMesh;
-
-
-class m_Point{
-
-public:
-	GLdouble x;
-	GLdouble y;
-	//double a,b,c,d;
-
-	//m_Point(GLdouble,GLdouble);
-	//m_Point();
-};
-
-typedef std::vector<m_Point> Curve;
-
-
-struct m_Curve{
-	Curve curve;
-	int mode;
-	const GLfloat* penColor;
-};
 
 class myOpenGLWidget : public QOpenGLWidget
 {

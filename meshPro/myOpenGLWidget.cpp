@@ -11,16 +11,7 @@ QOpenGLWidget(parent), eye_distance_(5.0)
 	border_curve.penColor = black;
 
 }
-//m_Point::m_Point()
-//{
-//	x = y = a = b = c = d = 0;
-//}
-//m_Point::m_Point(GLdouble x, GLdouble y)
-//{
-//	this->x = x;
-//	this->y = y;
-//	a = b = c = d = 0;
-//}
+
 
 myOpenGLWidget::~myOpenGLWidget()
 {
@@ -278,6 +269,7 @@ void myOpenGLWidget::drawPath(){
 	for (int i = 0; i < TYPES; i++)
 	{
 		for (auto iter = path[i].begin(); iter != path[i].end(); ++iter){
+
 			glColor3fv(iter->penColor);
 			glBegin(GL_LINE_STRIP);
 			//qDebug() << "line" << i;
@@ -288,6 +280,8 @@ void myOpenGLWidget::drawPath(){
 
 			}
 			glEnd();
+			
+			
 		}
 	}
 	
@@ -940,9 +934,6 @@ void myOpenGLWidget::paintGL()
 	glMultMatrixf(ptr_arcball_->GetBallMatrix());
 
 	render();
-
-
-	
 	
 	glPopMatrix();
 
@@ -999,6 +990,7 @@ void myOpenGLWidget::mousePressEvent(QMouseEvent *event)
 			current_curve.curve.clear();
 			//qDebug() << "press (x,y) = ("<<event->pos().x()<<", "<<event->pos().y()<<")";
 			p = to_perspect(event->pos());
+			qDebug() << "projection (x,y) = (" << p.x << ", " << p.y << ")";
 			current_curve.curve.push_back(p);
 			current_curve.penColor = penColor;
 			current_curve.mode = drawMode;
@@ -1107,25 +1099,33 @@ void myOpenGLWidget::mouseReleaseEvent(QMouseEvent *e)
 	{
 		m_Point p;
 		p = to_perspect(e->pos());
+		if (EularDistance(current_curve.curve.back(), p) > INTERVAL){
+			qDebug() << "projection (x,y) = (" << p.x << ", " << p.y << ")";
+			current_curve.curve.push_back(p);
+		}
 		
 		
-		current_curve.curve.push_back(p);
-		//if (drawMode == 0)
-		//{
-		//	natural_cubic_spline(&(current_curve.curve));
-		//}
-		//intersection(current_curve, path);
-		
-		if (drawMode==1 && isBorderClosed())
+		if (drawMode==1 )
 		{
-			is_closed = true;
-			qDebug() << "closed" << endl;
-			clearLines();
+			if (isBorderClosed())
+			{
+				is_closed = true;
+				qDebug() << "closed" << endl;
+				clearLines();
+			}
+			
 		}
 		
 		if (drawMode == 0)
 		{
-			segment(&(current_curve.curve));
+			/*current_curve.curve.clear();
+			current_curve.curve.push_back(m_Point(-1, -1));
+			current_curve.curve.push_back(m_Point(-0.7, -0.3));
+			current_curve.curve.push_back(m_Point(0, 0));
+			current_curve.curve.push_back(m_Point(0.7, 0.3));
+			current_curve.curve.push_back(m_Point(1, 1));*/
+			/*current_curve.curve.push_back(m_Point(1, -1));*/
+			cubic_spline(&current_curve,2);
 		}
 		
 		path[drawMode].push_back(current_curve);

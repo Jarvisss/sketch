@@ -4,37 +4,15 @@
 #include <vector>
 #include <Eigen/dense>
 #include <qdebug.h>
-
-#ifndef PI
-#define PI 3.14159265359
-#endif // !PI
+#include <types.h>
 
 
-const double inf = 0.0000001;
-using namespace Eigen;
-using std::vector;
+// num: 两点间插值的个数
+void cubic_spline(m_Curve *c, int num);
+
+GLdouble cal_curvature(GLdouble dx, GLdouble dx2, GLdouble dy, GLdouble dy2);
+
+GLdouble euclid_distance(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2);
 
 
-class pMath{
-
-	int					totalVertices;
-	//MyMesh				*ptrMesh;
-	int					type;
-
-
-	MatrixXd CoefficientMatrix;
-	MatrixXd m;
-	MatrixXd b;
-
-
-	vector<int>	bd_pts;
-	vector<int>	in_pts;
-
-public:
-	
-	pMath(int );
-	~pMath();
-	void cubic_spline();
-};
-
-#endif 
+#endif
